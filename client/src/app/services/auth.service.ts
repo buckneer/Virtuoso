@@ -3,8 +3,9 @@ import { env } from "../env";
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Token } from "../models/token";
 import { BehaviorSubject, Observable, catchError, map, throwError } from "rxjs";
-import { User, UserResp } from '../models/user';
+import { User, UserRegister, UserResp } from '../models/user';
 import { TokenStorageService } from './token.service';
+import { ResetPassword } from '../models/reset';
 
 
 
@@ -17,13 +18,6 @@ export class AuthService {
     private storageService = inject(TokenStorageService);
 
 
-    private stateItem: BehaviorSubject<any | null> = new BehaviorSubject(null);
-    stateItem$: Observable<any | null> = this.stateItem.asObservable();
-
-
-    private message: BehaviorSubject<any | null> = new BehaviorSubject(null);
-    message$: Observable<any | null> = this.message.asObservable();
-
 
     private user: BehaviorSubject<any | null> = new BehaviorSubject(null);
     user$: Observable<User | null> = this.user.asObservable();
@@ -34,27 +28,10 @@ export class AuthService {
         return this.http.get<any>(`${this.apiUrl}/healthcheck`, {observe: 'response'});
     }
 
-    // user(): Observable<User> {
-
-    //     let authToken = this.storageService.getToken();
-
-    //     let options = {
-    //         headers: new HttpHeaders({'Authorization': `Bearer ${authToken}`})
-    //     }
-
-    //     return this.http.get(`${this.apiUrl}profile`, options);
-
-    //     // return this.http.get(`${this.apiUrl}profile`, options).pipe(
-    //     //     catchError((error) => {
-    //     //         console.error("Api Error", error.message);
-    //     //         return throwError("Username");
-    //     //     })
-    //     // );
-    // }
-
-    changeState(name: string) {
-        const mess = `hi ${name}`;
-        this.message.next(mess);
+    register(user: UserRegister): Observable<HttpResponse<any>> {
+        return this.http.post(`${this.apiUrl}register`, user, {observe: 'response'});
+        // error.__body.type
+        // error.json()
     }
 
     login(email: string, password: string): Observable<UserResp> {
@@ -91,6 +68,16 @@ export class AuthService {
         // )
     }
     
+
+    sendForgot(email: string): Observable<HttpResponse<any>> {
+        return this.http.post(`${this.apiUrl}reset`, {email}, {observe: "response"});
+    }
+
+
+    newPassword(data: ResetPassword): Observable<HttpResponse<any>> {
+        return this.http.post(`${this.apiUrl}reset/password`, data, {observe: "response"});
+    }
+
     logout(): Observable<HttpResponse<any>> {
         let authToken = this.storageService.getToken();
 

@@ -1,4 +1,4 @@
-<nav class="bg-black w-full">
+<nav *ngIf="this.navbarService.visible" class="bg-black w-full fixed">
     <div class="flex justify-between items-center mx-5">
         <div class="is-a-brand flex-1">
             <img src="assets/logo.svg" class="p-4 w-1/3" />

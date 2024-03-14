@@ -62,7 +62,7 @@ export const sendEmailConfirmMail = (name: string, code: string, email: string) 
 export const sendResetPasswordEmail = async (name: string, email: string, code: string) => {
 
 
-  let urlReset = `http://localhost:1337/reset?email=${email}&code=${code}`;
+  let urlReset = `http://localhost:4200/reset?email=${email}&code=${code}`;
 
   const mailOptions = {
       from: '"Virtuoso" app.virtuoso@gmail.com ', // sender address

@@ -5,12 +5,13 @@ import { AuthService } from '../services/auth.service';
 import { Observable, catchError, map } from 'rxjs';
 import { Token } from '@angular/compiler';
 import { User } from '../models/user';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
+import { NavbarService } from '../services/navbar.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, NgIf],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
@@ -23,6 +24,9 @@ export class NavbarComponent implements OnInit {
 
   private tokenService = inject(TokenStorageService);
   private authService = inject(AuthService);
+  public navbarService = inject(NavbarService);
+
+
   user$ : Observable<User | null> = this.authService.user$;
   // message$ = this.authService.message$;
 

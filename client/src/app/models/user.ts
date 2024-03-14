@@ -14,3 +14,10 @@ export interface User {
     confirmed?: string;
     
 }
+
+export interface UserRegister {
+    username?: string;
+    email?: string;
+    name?: string;
+    password?: string;
+}

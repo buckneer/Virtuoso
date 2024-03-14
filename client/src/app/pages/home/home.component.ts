@@ -3,6 +3,7 @@ import { TokenStorageService } from '../../services/token.service';
 import { AuthService } from '../../services/auth.service';
 import { catchError } from 'rxjs';
 import { User } from '../../models/user';
+import { NavbarService } from '../../services/navbar.service';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +14,15 @@ import { User } from '../../models/user';
 })
 export class HomeComponent implements OnInit {
 
-  	private tokenService = inject(TokenStorageService);
+    private tokenService = inject(TokenStorageService);
 	accessToken = this.tokenService.getRefresh();
+	private navbarService = inject(NavbarService);
 
 	constructor() { }
 
 	
-	ngOnInit(): void {
-		
+    ngOnInit(): void {
+		this.navbarService.show()
 	}
 	
 }

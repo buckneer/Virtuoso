@@ -16,8 +16,9 @@ export async function handleRegisterUser(req: Request, res: Response) {
 		//
 		return res.send(JSON.stringify({"message": "Registered"}));
 	} catch (e: any) {
-		log.error(e.message);
-		return handleCustomError(e, res);
+		// log.error(e.message);
+		// return handleCustomError(e, res);
+		return res.status(e.status).send(JSON.stringify(e));
 	}
 }
 
@@ -34,7 +35,7 @@ export async function handleLogin(req: Request, res: Response) {
 		return res.status(401).send("User agent is required");
 	} catch (e: any) {
 		log.error(e.message);
-		return res.status(409).send(e.message)
+		return res.status(e.status).send(JSON.stringify(e));
 	}
 }
 
@@ -52,7 +53,7 @@ export async function handleRefresh(req: Request, res: Response) {
 		return res.status(401).send("User agent is required");
 	} catch (e: any) {
 		log.error(e.message);
-		return res.status(409).send(e.message)
+		return res.status(e.status).send(JSON.stringify(e));
 	}
 }
 
@@ -72,13 +73,16 @@ export async function handleLogout(req: Request, res: Response) {
 				return res.sendStatus(400);
 			}
 		} else {
-			return res.sendStatus(400).send("User agent is required");
+			return res.sendStatus(400).send(JSON.stringify({
+				status: 409,
+				message: "Useragent is required"
+			}));
 		}
 
 
 	} catch (e: any) {
 		log.error(e.message);
-		return res.status(409).send(e.message)
+		return res.status(e.status).send(JSON.stringify(e));
 	}
 }
 
@@ -140,7 +144,7 @@ export async function handleSendPasswordReset(req: Request, res: Response) {
 			let mailResponse = await sendPasswordReset(email);
 			
 			if (mailResponse) {
-				return res.sendStatus(202);
+				return res.send(mailResponse);
 			} else {
 				return res.sendStatus(400);
 			}
@@ -166,7 +170,7 @@ export async function handleResetPassword(req: Request, res: Response) {
 			let logoutResp = await forgotPassword(email, code, password);
 			
 			if (logoutResp) {
-				return res.sendStatus(200);
+				return res.send(logoutResp);
 			} else {
 				return res.sendStatus(400);
 			}

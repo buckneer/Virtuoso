@@ -16,7 +16,11 @@ export const registerUser = async (user: UserDocument) => {
 		let userExists= await User.findOne({"$or": [{email: user.email}, {username: user.username}]});
 
 		if (userExists) {
-			throw new CustomError("ValidationError", "User Already Exists");
+			// throw new CustomError("ValidationError", "User Already Exists");
+			throw {
+				status: 409,
+				message: "User already exists"
+			}
 		} else {
 			user.password = await bcrypt.hash(user.password!, 10);
 			const newUser = new User({...user});
@@ -24,15 +28,7 @@ export const registerUser = async (user: UserDocument) => {
 			return {"message": "User created"};
 		}
 	} catch (e: any) {
-		if (e.name === 'MongoError') {
-            throw new CustomError("DatabaseError", "Database error: " + e.message);
-        } else if (e.name === 'ValidationError') {
-            throw new CustomError("ValidationError", "Validation error: " + e.message);
-        } else if (e.name === 'InvalidCredentialsError') {
-			throw new CustomError("InvalidCredentialsError", e.message);
-		} else {
-            throw new CustomError("InternalError", "Internal server error");
-        }
+		throw e;
 	}
 }
 
@@ -68,23 +64,23 @@ export const loginUser = async (username: string, password: string, userAgent: s
 
 
 			} else {
-				throw new CustomError("InvalidCredentialsError", "Username or password incorrect");
+				// throw new CustomError("InvalidCredentialsError", "Username or password incorrect");
+				throw {
+					status: 401,
+					message: "Username or password incorrect"
+				}
 				
 			}
 		} else {
 			// return {"message": "Username or password incorrect"}
-			throw new CustomError("InvalidCredentialsError", "Username and password are required");
+			// throw new CustomError("InvalidCredentialsError", "Username and password are required");
+			throw {
+				status: 409,
+				message: "Username and Password are required"
+			}
 		}
 	} catch (e: any) {
-		if (e.name === 'MongoError') {
-            throw new CustomError("DatabaseError", e.message);
-        } else if (e.name === 'ValidationError') {
-            throw new CustomError("ValidationError", e.message);
-        } else if (e.name === 'InvalidCredentialsError') {
-			throw new CustomError("InvalidCredentialsError", e.message);
-		}else {
-            throw new CustomError("InternalError", "Internal server error");
-        }
+		throw e;
 	}
 }
 
@@ -100,22 +96,21 @@ export const logoutUser = async (username: string, userAgent: string) => {
 
 				return {"message": "Logged out successfully"};
 			} else {
-				throw new CustomError("ValidationError", "Session Expired");
+				
+				throw {
+					status: 401,
+					message: "Access Token expired"
+				}
 			}
 		} else {
-			throw new CustomError("ValidationError", "This user doesn't exist");
+			throw {
+				status: 409,
+				message: 'User doesn\'t exist'
+			}
 		}
 
 	} catch (e: any) {
-		if (e.name === 'MongoError') {
-            throw new CustomError("DatabaseError", "Database error: " + e.message);
-        } else if (e.name === 'ValidationError') {
-            throw new CustomError("ValidationError", "Validation error: " + e.message);
-        } else if (e.name === 'InvalidCredentialsError') {
-			throw new CustomError("InvalidCredentialsError", e.message);
-		}else {
-            throw new CustomError("InternalError", "Internal server error");
-        }
+		throw e;
 	}
 }
 
@@ -131,25 +126,26 @@ export const refreshAccessToken = async (refreshToken: string, userAgent: string
 					const accessToken = jwt.sign({username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: "30m"});
 					return {"access_token": accessToken};
 				} else {
-					throw new CustomError("ValidationError", "User Already Exists");
+					return {
+						status: 500,
+						message: 'User already exists'
+					}
 				}
 			} else {
-				throw new CustomError("ValidationError", "Refresh token invalid");
+				throw {
+					status: 409,
+					message: 'Refresh token invalid'
+				};
 			}
 
 		} else {
-			throw new CustomError("ValidationError", "Refresh token invalid");
+			throw {
+				status: 409,
+				message: 'Refresh token invalid'
+			};
 		}
 	} catch (e: any) {
-		if (e.name === 'MongoError') {
-            throw new CustomError("DatabaseError", "Database error: " + e.message);
-        } else if (e.name === 'ValidationError') {
-            throw new CustomError("ValidationError", "Validation error: " + e.message);
-        } else if (e.name === 'InvalidCredentialsError') {
-			throw new CustomError("InvalidCredentialsError", e.message);
-		}else {
-            throw new CustomError("InternalError", "Internal server error");
-        }
+		throw e;
 	}
 }
 
