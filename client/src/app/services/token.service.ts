@@ -12,9 +12,6 @@ const USER_KEY = 'auth-user';
 @Injectable({
     providedIn: 'root'
 })
-@Injectable({
-    providedIn: 'root'
-})
 export class TokenStorageService {
 
     constructor(private cookieService: CookieService) { }
@@ -58,5 +55,11 @@ export class TokenStorageService {
 
     public loggedIn(): boolean {
         return !!this.cookieService.get(USER_KEY);
+    }
+
+    public getRoles() : Array<string> | null {
+        let user = this.getUser();
+        if(!user) return null;
+        return user.role!
     }
 }
