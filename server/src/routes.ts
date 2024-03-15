@@ -11,7 +11,7 @@ export default function (app: Express) {
 	app.post("/login", handleLogin);
 	app.post("/refresh", handleRefresh);
 	app.post("/verification", handleSendVerification);
-	app.get("/verify", handleConfirmEmail);
+	app.post("/verify", handleConfirmEmail);
 	app.get('/profile', authenticateToken, handleGetUser);
 	app.post("/reset", handleSendPasswordReset);
 	app.post('/reset/password', handleResetPassword);

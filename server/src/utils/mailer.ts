@@ -30,6 +30,8 @@ transporter.use('compile', hbs(handlebarOptions))
 
 export const sendEmailConfirmMail = (name: string, code: string, email: string) => {
 
+    let urlConfirm = `http://localhost:4200/verify?email=${email}&code=${code}`;
+
     const mailOptions = {
         from: '"Virtuoso" app.virtuoso@gmail.com ', // sender address
         template: "index", // the name of the template file, i.e., email.handlebars
@@ -38,7 +40,8 @@ export const sendEmailConfirmMail = (name: string, code: string, email: string) 
         context: {
           user: name,
           code: code,
-          email: email
+          email: email,
+		  url: urlConfirm
         },
       };
 

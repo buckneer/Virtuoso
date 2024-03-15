@@ -27,10 +27,27 @@ export class NavbarComponent implements OnInit {
   public navbarService = inject(NavbarService);
 
 
-  user$ : Observable<User | null> = this.authService.user$;
+  user$ : Observable<User | null>;
+//   user : User | null = null;
   // message$ = this.authService.message$;
 
   ngOnInit() {
+	this.user$ = this.authService.user$;
+	const user = this.tokenService.getUser();
+
+	if(user) {
+		this.authService.setUser(user);
+	}
+    // this.user$.subscribe({ next: data => {
+	// 	console.log(data);
+	// 	if(data === null || this.tokenService.getUser() == null) {
+	// 		this.user == null;
+	// 	} else {
+	// 		console.log("else runs");
+	// 		this.user = data || this.tokenService.getUser();
+	// 	}
+    // }})
+
     // this.status$ = this.authService.stateItem$.pipe(map(state => {
     //   console.log(state);
     //   return state;
@@ -53,12 +70,13 @@ export class NavbarComponent implements OnInit {
   
   logoutUser() {
     this.authService.logout().subscribe((resp) => {
-      // console.log(resp);
+      console.log(resp);
+	  
     }, (error: any) => {
-      // console.error(error);
+      console.error(error);
     });
 
-    this.tokenService.signOut();
+    
   }
 
   

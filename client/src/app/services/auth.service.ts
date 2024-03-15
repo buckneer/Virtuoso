@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { env } from "../env";
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Token } from "../models/token";
-import { BehaviorSubject, Observable, catchError, map, throwError } from "rxjs";
+import { BehaviorSubject, Observable, catchError, map, tap, throwError } from "rxjs";
 import { User, UserRegister, UserResp } from '../models/user';
 import { TokenStorageService } from './token.service';
 import { ResetPassword } from '../models/reset';
@@ -15,6 +15,21 @@ import { ResetPassword } from '../models/reset';
 export class AuthService {
 
     private apiUrl = env.apiUrl;
+
+    private urls = {
+        register: `${this.apiUrl}/register`,
+        login: `${this.apiUrl}/login`,
+        logout: `${this.apiUrl}/logout`,
+        healthcheck: `${this.apiUrl}/healtcheck`,
+        refresh: `${this.apiUrl}/refresh`,
+        forgot: `${this.apiUrl}/reset`,
+        newPassword: `${this.apiUrl}/reset/password`,
+        sendConfirm:  `${this.apiUrl}/verification`,
+        confirmEmail:  `${this.apiUrl}/verify`,
+        protected: `${this.apiUrl}/protected`
+
+    }
+
     private storageService = inject(TokenStorageService);
 
 
@@ -24,19 +39,31 @@ export class AuthService {
 
     constructor(private http: HttpClient) { }
 
+    setUser(user: User): void {
+        this.user.next(user);
+    }
+
     healthcheck(): Observable<HttpResponse<any>> {
-        return this.http.get<any>(`${this.apiUrl}/healthcheck`, {observe: 'response'});
+        return this.http.get<any>(this.urls.healthcheck, {observe: 'response'});
+    }
+    protected(): Observable<HttpResponse<any>> {
+        let authToken = this.storageService.getToken();
+
+        let options = {
+            headers: new HttpHeaders({'Authorization': `Bearer ${authToken}`})
+        }
+
+        return this.http.get<any>(this.urls.protected, {...options, observe: 'response'});
     }
 
     register(user: UserRegister): Observable<HttpResponse<any>> {
-        return this.http.post(`${this.apiUrl}register`, user, {observe: 'response'});
+        return this.http.post(this.urls.register, user, {observe: 'response'});
         // error.__body.type
         // error.json()
     }
 
     login(email: string, password: string): Observable<UserResp> {
-
-        return this.http.post(`${this.apiUrl}login`, {
+        return this.http.post(this.urls.login, {
             username: email,
             password
         }).pipe(map((resp: UserResp) => {
@@ -56,27 +83,34 @@ export class AuthService {
             this.user.next(resp.user);
             return resp;
         }))
+    }
 
-        // return this.http.post(`${this.apiUrl}login`, {
-        //     username: email,
-        //     password
-        // }).pipe(
-        //     catchError((error) => {
-        //         console.error("API Error: ", error.message);
-        //         return throwError('Username or password incorrect');
-        //     })
-        // )
+    refreshToken() {
+        return this.http.post(this.urls.refresh, {
+            refresh_token : this.storageService.getRefresh()
+        }).pipe(
+            tap((token: any) => { this.storageService.setToken(token.access_token)})
+        )
     }
     
 
     sendForgot(email: string): Observable<HttpResponse<any>> {
-        return this.http.post(`${this.apiUrl}reset`, {email}, {observe: "response"});
+        return this.http.post(this.urls.forgot, {email}, {observe: "response"});
     }
 
 
     newPassword(data: ResetPassword): Observable<HttpResponse<any>> {
-        return this.http.post(`${this.apiUrl}reset/password`, data, {observe: "response"});
+        return this.http.post(this.urls.newPassword, data, {observe: "response"});
     }
+
+    sendConfirm(email: string): Observable<HttpResponse<any>> {
+        return this.http.post(this.urls.sendConfirm, {email},  {observe: 'response'});
+    }
+
+    confirmEmail(email: string, code: string): Observable<HttpResponse<any>> {
+        return this.http.post(this.urls.confirmEmail, {email, code},  {observe: 'response'});
+    }
+
 
     logout(): Observable<HttpResponse<any>> {
         let authToken = this.storageService.getToken();
@@ -85,17 +119,16 @@ export class AuthService {
             headers: new HttpHeaders({'Authorization': `Bearer ${authToken}`})
         }
 
-        return this.http.delete<any>(`${this.apiUrl}logout`, { ...options, observe: 'response'}).pipe(resp => {
-            this.user.next(null);
-            return resp;
-        });
-
-        // return this.http.get(`${this.apiUrl}profile`, options).pipe(
-        //     catchError((error) => {
-        //         console.error("Api Error", error.message);
-        //         return throwError("Username");
-        //     })
-        // );
+        return this.http.delete<any>(this.urls.logout, { ...options, observe: 'response'}).pipe(
+            tap(() => {
+                this.storageService.signOut();
+                this.user.next(null);
+                
+            }),
+            catchError((error) => {
+                return throwError(error);
+            })  
+        );
     }
 }
 

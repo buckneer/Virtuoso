@@ -6,15 +6,16 @@ import { User } from '../../models/user';
 import { NavbarService } from '../../services/navbar.service';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+	selector: 'app-home',
+	standalone: true,
+	imports: [],
+	templateUrl: './home.component.html',
+	styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
 
     private tokenService = inject(TokenStorageService);
+	private authService = inject(AuthService);
 	accessToken = this.tokenService.getRefresh();
 	private navbarService = inject(NavbarService);
 
@@ -22,7 +23,19 @@ export class HomeComponent implements OnInit {
 
 	
     ngOnInit(): void {
-		this.navbarService.show()
+		this.navbarService.show();
+	}
+
+
+	getProtected() {
+		this.authService.protected().subscribe({
+			next: data => {
+				//console.log(data);
+			},
+			error: err => {
+				//console.log(err)
+			}
+		})
 	}
 	
 }

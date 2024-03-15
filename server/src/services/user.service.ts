@@ -35,10 +35,11 @@ export const registerUser = async (user: UserDocument) => {
 export const loginUser = async (username: string, password: string, userAgent: string) => {
     try {
 		const user = await User.findOne({username: username});
+		const expire = process.env.TOKEN_EXPIRE as string;
 		if (user) {
 			let matchingPass = await bcrypt.compare(password, user.password!);
 			if (matchingPass) {
-				const accessToken = jwt.sign({username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: "15m"});
+				const accessToken = jwt.sign({username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: expire});
 				const refreshToken = jwt.sign({username: user.username, role: user.role},
 					process.env.REFRESH_SECRET as string);
 
@@ -94,7 +95,7 @@ export const logoutUser = async (username: string, userAgent: string) => {
 				await session.save();
 				
 
-				return {"message": "Logged out successfully"};
+				return {message: "Logged out successfully"};
 			} else {
 				
 				throw {
@@ -116,6 +117,7 @@ export const logoutUser = async (username: string, userAgent: string) => {
 
 export const refreshAccessToken = async (refreshToken: string, userAgent: string) => {
     try {
+		const expire = process.env.TOKEN_EXPIRE as string;
 		let session = await Session.findOne({refreshToken, "active": true, userAgent})
 		if(session) {
 			let decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET as string);
@@ -123,7 +125,7 @@ export const refreshAccessToken = async (refreshToken: string, userAgent: string
 				//@ts-ignore
 				let user = await User.findOne({username: decoded.username});
 				if (user) {
-					const accessToken = jwt.sign({username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: "30m"});
+					const accessToken = jwt.sign({username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: expire});
 					return {"access_token": accessToken};
 				} else {
 					return {

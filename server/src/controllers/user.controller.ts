@@ -68,14 +68,14 @@ export async function handleLogout(req: Request, res: Response) {
 			let logoutResp = await logoutUser(username, userAgent);
 			
 			if (logoutResp) {
-				return res.sendStatus(202);
+				return res.status(200).send(JSON.stringify(logoutResp));
 			} else {
-				return res.sendStatus(400);
+				return res.status(500).send(JSON.stringify({message: "Internal Server error"}));
 			}
 		} else {
 			return res.sendStatus(400).send(JSON.stringify({
 				status: 409,
-				message: "Useragent is required"
+				message: "User-agent is required"
 			}));
 		}
 
@@ -95,12 +95,18 @@ export async function handleSendVerification(req: Request, res: Response) {
 			let mailResponse = await sendVerification(email);
 			
 			if (mailResponse) {
-				return res.sendStatus(202);
+				return res.send(mailResponse);
 			} else {
-				return res.sendStatus(400);
+				return res.sendStatus(409).send({
+					status: 409,
+					message: "Email invalid"
+				});
 			}
 		} else {
-			return res.sendStatus(400).send("Email is required");
+			return res.sendStatus(409).send({
+				status: 409,
+				message: "Email invalid"
+			});
 		}
 
 
@@ -113,19 +119,25 @@ export async function handleSendVerification(req: Request, res: Response) {
 export async function handleConfirmEmail(req: Request, res: Response) {
 	try {
 		//@ts-ignore
-		let email = req.query.email as string;
-        let code = req.query.verify as string;
+		let email = req.body.email as string;
+        let code = req.body.code as string;
 
 		if(email && code) {
 			let logoutResp = await confirmEmail(email, code);
 			
 			if (logoutResp) {
-				return res.sendStatus(200);
+				return res.send(logoutResp);
 			} else {
-				return res.sendStatus(400);
+				return res.sendStatus(409).send({
+					status: 409,
+					message: "Email or Code invalid"
+				});
 			}
 		} else {
-			return res.sendStatus(400).send("Email is required");
+			return res.sendStatus(409).send({
+				status: 409,
+				message: "Email or Code invalid"
+			});
 		}
 
 
@@ -207,9 +219,9 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
 	const authHeader = req.headers['authorization'];
 	if(authHeader) {
 		const token = authHeader.split( " ")[1];
-		if (token == null) return res.sendStatus(401);
+		if (token == null) return res.sendStatus(401).send({message: "Token null"});
 		jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
-			if (err) return res.sendStatus(403);
+			if (err) return res.status(401).send(JSON.stringify({message: "Expired token"}));
 			//@ts-ignore
 			req.user = user;
 			next();

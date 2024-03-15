@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
 				this.message = `User Registered. Redirecting in ${this.counter} seconds`;
 				setInterval(() => {
 					if(this.counter == 1) {
-						this.router.navigateByUrl('login');
+						this.router.navigate(['/confirm', {email: this.registerForm.value.email}]);
 					} else {
 						this.counter--;
 					}
