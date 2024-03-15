@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { Token } from '../../models/token';
 import { TokenStorageService } from '../../services/token.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { User } from '../../models/user';
 import { CommonModule, NgIf } from '@angular/common';
 import { NavbarService } from '../../services/navbar.service';
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 	errorMessage?: string;
 	success = false;
 	loggedIn = false;
-
+	
 	loginForm = new FormGroup({
 		email: new FormControl(''),
 		password: new FormControl('')
@@ -49,7 +49,9 @@ export class LoginComponent implements OnInit {
 	onSubmit() {
 		this.authService.login(this.loginForm.value.email!, this.loginForm.value.password!).subscribe(
 			{next: data => {
+				
 				this.router.navigateByUrl('/');
+				
 			},
 			error: err => {
 				if(err.status == 409) {
@@ -60,9 +62,5 @@ export class LoginComponent implements OnInit {
 			}}
 		)
   	}
-
-	  reloadPage(): void {
-		window.location.reload();
-	  }
 }
 

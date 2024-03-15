@@ -19,15 +19,15 @@ export class RoleGuard implements CanActivate {
 		if (logged) {
 			// Perform check for roles
 			if(this.hasPermissions(logged, allowed)) return true;
-		  	
-			this.router.navigate(['/']);
+			
+			// this.router.navigate(['/']);
 			return false;
 		}
-		this.router.navigate(['/login']);
+		this.router.navigate(['login']);
 		return false;
 	}
 
-	hasPermissions(userRoles: Array<string>, requiredRoles: Array<string>) {
+	private hasPermissions(userRoles: Array<string>, requiredRoles: Array<string>) {
 		if (userRoles.includes('admin')) {
 			return true; // Admin can access all roles
 		}

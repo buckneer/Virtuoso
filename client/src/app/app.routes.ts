@@ -23,7 +23,7 @@ export const routes: Routes = [
     {path: 'verify', component: VerifyEmailComponent},
 
     // Protected
-    {path: 'protected', component: ProtectedComponent, canActivate: [LoginGuard]},
+    {path: 'protected', component: ProtectedComponent, canActivate: [RoleGuard], data: {roles: ['admin', 'mod', 'user']}},
     {path: 'admin', component: AdminComponent, canActivate: [RoleGuard], data: { roles: ['admin']}},
-    {path: 'mod', component: ModComponent, canActivate: [RoleGuard],  data: { roles: ['mod']}},
+    {path: 'mod', component: ModComponent, canActivate: [RoleGuard],  data: { roles: ['admin', 'mod']}},
 ];
