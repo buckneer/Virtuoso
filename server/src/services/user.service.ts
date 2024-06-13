@@ -30,8 +30,8 @@ export const loginUser = async (username: string, password: string, userAgent: s
 	if (user) {
 		let matchingPass = await bcrypt.compare(password, user.password!);
 		if (matchingPass) {
-			const accessToken = jwt.sign({username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: expire});
-			const refreshToken = jwt.sign({username: user.username, role: user.role},
+			const accessToken = jwt.sign({id: user._id, username: user.username, role: user.role}, process.env.JWT_SECRET as string, {expiresIn: expire});
+			const refreshToken = jwt.sign({id: user._id, username: user.username, role: user.role},
 				process.env.REFRESH_SECRET as string);
 
 			let session = {
@@ -101,6 +101,7 @@ export const refreshAccessToken = async (refreshToken: string, userAgent: string
 	let user = await User.findOne({username: decoded.username});
 	if (user) {
 		const accessToken = jwt.sign({
+			id: user._id,
 			username: user.username,
 			role: user.role
 		}, process.env.JWT_SECRET as string, {expiresIn: expire});

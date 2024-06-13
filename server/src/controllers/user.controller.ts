@@ -3,7 +3,6 @@ import {confirmEmail, forgotPassword, getProfile, loginUser, logoutUser, refresh
 import {UserDocument} from "../models/user.model";
 import jwt from "jsonwebtoken";
 import log from "../logger";
-import { handleCustomError } from "../utils/errors";
 
 export async function handleRegisterUser(req: Request, res: Response) {
 	try {
@@ -66,7 +65,7 @@ export async function handleLogout(req: Request, res: Response) {
 
 		if(userAgent) {
 			let logoutResp = await logoutUser(username, userAgent);
-			
+
 			if (logoutResp) {
 				return res.status(200).send(JSON.stringify(logoutResp));
 			} else {
@@ -93,7 +92,7 @@ export async function handleSendVerification(req: Request, res: Response) {
 
 		if(email) {
 			let mailResponse = await sendVerification(email);
-			
+
 			if (mailResponse) {
 				return res.send(mailResponse);
 			} else {
@@ -124,7 +123,7 @@ export async function handleConfirmEmail(req: Request, res: Response) {
 
 		if(email && code) {
 			let logoutResp = await confirmEmail(email, code);
-			
+
 			if (logoutResp) {
 				return res.send(logoutResp);
 			} else {
@@ -154,7 +153,7 @@ export async function handleSendPasswordReset(req: Request, res: Response) {
 
 		if(email) {
 			let mailResponse = await sendPasswordReset(email);
-			
+
 			if (mailResponse) {
 				return res.send(mailResponse);
 			} else {
@@ -173,14 +172,14 @@ export async function handleSendPasswordReset(req: Request, res: Response) {
 
 export async function handleResetPassword(req: Request, res: Response) {
 	try {
-		
+
 		let email = req.body.email as string;
         let code = req.body.code as string;
         let password = req.body.password as string;
 
 		if(email && code && password) {
 			let logoutResp = await forgotPassword(email, code, password);
-			
+
 			if (logoutResp) {
 				return res.send(logoutResp);
 			} else {
@@ -198,56 +197,21 @@ export async function handleResetPassword(req: Request, res: Response) {
 }
 
 export async function handleGetUser(req: Request, res: Response) {
-    
-    
+
+
     try {
 		//@ts-ignore
 		let currUsername = req.user.username;
-			
+
 		let profile = await getProfile(currUsername);
-			
+
         return res.send(JSON.stringify(profile));
 
 	} catch (e: any) {
 		log.error(e.message);
 		return res.status(409).send(e.message)
 	}
-    
+
 }
 
-export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
-	const authHeader = req.headers['authorization'];
-	if(authHeader) {
-		const token = authHeader.split( " ")[1];
-		if (token == null) return res.sendStatus(401).send({message: "Token null"});
-		jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
-			if (err) return res.status(401).send(JSON.stringify({message: "Expired token"}));
-			//@ts-ignore
-			req.user = user;
-			next();
-		});
-	} else {
-		res.sendStatus(403);
-	}
-}
 
-export const adminToken = async (req: Request, res: Response, next: NextFunction)=> {
-    const authHeader = req.headers['authorization'];
-	if(authHeader) {
-		const token = authHeader.split( " ")[1];
-		if (token == null) return res.sendStatus(401);
-		jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
-			if (err) return res.sendStatus(403);
-			//@ts-ignore
-            if(user.role == "admin") {
-                //@ts-ignore
-                req.user = user;
-			    next();
-            } else {
-                return res.sendStatus(401);
-            }
-		});
-	} else {
-		res.sendStatus(403);
-	}
-}

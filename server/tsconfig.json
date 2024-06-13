@@ -103,8 +103,10 @@
     "baseUrl": "src",
     "paths": {
       "@config/*": ["config/*"]
-    }
+    },
+
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "files": ["src/types/custom.d.ts"]
 }
 

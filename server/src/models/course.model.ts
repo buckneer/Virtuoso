@@ -1,4 +1,4 @@
-import {Document, Schema, model, ObjectId } from 'mongoose'
+import {Document, Schema, model, ObjectId, Types} from 'mongoose'
 import { LectureDocument } from './lecture.model';
 
 export interface CourseDocument extends Document {
@@ -8,7 +8,7 @@ export interface CourseDocument extends Document {
     cover?: string,
     length?: string,
     level?: number,
-    lectures?: LectureDocument[],
+    lectures?: Types.ObjectId[],
     price?: number,
     rating?: number,
     enrolls?: number,
