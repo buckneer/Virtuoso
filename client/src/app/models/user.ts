@@ -12,7 +12,6 @@ export interface User {
     name?: string;
     role?: Array<string>;
     confirmed?: string;
-    
 }
 
 export interface UserRegister {
