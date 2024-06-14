@@ -1,14 +1,14 @@
-import { Document, Schema, model } from "mongoose";
+import {Document, Schema, model, Types} from "mongoose";
 import { LessonDocument } from "./lesson.model";
 
 export interface LectureDocument extends Document {
-    courseId: string,
+    courseId: Types.ObjectId,
     name: string,
     description: string,
     length: string,
     type: string,
     content: string,
-    lessons: LessonDocument[]
+    lessons: Types.ObjectId[]
 }
 
 const LectureSchema = new Schema({

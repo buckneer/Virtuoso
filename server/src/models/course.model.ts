@@ -12,6 +12,7 @@ export interface CourseDocument extends Document {
     price?: number,
     rating?: number,
     enrolls?: number,
+    enrollments: Types.ObjectId[]
 }
 
 const CourseSchema = new Schema({
@@ -24,7 +25,8 @@ const CourseSchema = new Schema({
     lectures: [{type: Schema.ObjectId, ref: 'Lecture'}],
     price: {type: Number, required: false},
     rating: {type: Number, required: false},
-    enrolls: {type: Number, required: false}
+    enrolls: {type: Number, default: 0},
+    enrollments: [{type: Schema.ObjectId, ref: 'User'}]
 });
 
 const Course = model<CourseDocument>('Course', CourseSchema);
