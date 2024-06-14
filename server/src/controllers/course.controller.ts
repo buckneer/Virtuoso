@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {CourseDocument} from "../models/course.model";
 import {
 	createCourse,
-	deleteCourse, enrollCourse, finishCourse,
+	deleteCourse,
 	getCourse,
 	getCourses, getEnrolledCourses, getLecturesByCourse,
 	getLessonsByLecture,
@@ -109,35 +109,12 @@ export async function handleGetLessonsByLecture(req: Request, res: Response) {
 	}
 }
 
-export async function handleEnrollCourse(req: Request, res: Response) {
-	try {
-		let { courseId } = req.params;
-		let userId = req.user!.id;
-
-		let resp = await enrollCourse(courseId, userId);
-		return res.send(resp);
-	} catch (e: any) {
-		return res.status(e.status || 500).send(e || 'Internal Server Error');
-	}
-}
 
 export async function handleGetEnrolledCourses(req: Request, res: Response) {
 	try {
 		let userId = req.user!.id;
 
 		let resp = await getEnrolledCourses(userId);
-		return res.send(resp);
-	} catch (e: any) {
-		return res.status(e.status || 500).send(e || 'Internal Server Error');
-	}
-}
-
-export async function handleFinishCourse(req: Request, res: Response) {
-	try {
-		let userId = req.user!.id;
-		let { courseId } = req.params;
-
-		let resp = await finishCourse(userId, courseId);
 		return res.send(resp);
 	} catch (e: any) {
 		return res.status(e.status || 500).send(e || 'Internal Server Error');

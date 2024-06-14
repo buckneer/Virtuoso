@@ -8,13 +8,6 @@ import {objectId} from "../utils";
 import User from "../models/user.model";
 
 
-// export const createCourse = async (course : CourseDocument) => {
-// 	let newCourse = new Course(course);
-// 	let newCreated = await newCourse.save();
-//
-// 	if(!newCreated) throw newError(500, "Internal Server Error");
-// }
-
 
 export const createCourse = async (userId: string, title: string, description: string, photoPath: string) => {
 	const course = new Course({
@@ -98,37 +91,9 @@ export const getLessonsByLecture = async (lectureId: string) => {
 	return lessons;
 }
 
-export const enrollCourse = async (courseId: string, userId: string) => {
-	let course = await Course.findById(courseId);
-	if (!course) throw newError(404, 'Course not found');
-
-	let userObjectId = objectId(userId);
-
-	if (!course.enrollments.includes(userObjectId)) {
-		course.enrollments.push(userObjectId);
-		course.enrolls = course.enrollments.length;
-		await course.save();
-	}
-
-	return newResponse('User enrolled in course');
-}
 
 export const getEnrolledCourses = async (userId: string) => {
 	let courses = await Course.find({ enrollments: userId });
 	return courses;
 }
 
-export const finishCourse = async (userId: string, courseId: string) => {
-	let user = await User.findById(userId);
-	if (!user) throw new Error('User not found');
-
-	const courseObjectId = objectId(courseId);
-
-	if (!user.completedCourses.includes(courseObjectId)) {
-		user.completedCourses.push(courseObjectId);
-		user.completedCoursesDates.push({ courseId: courseObjectId, date: new Date() });
-		await user.save();
-	}
-
-	return { message: 'Course marked as completed' };
-};

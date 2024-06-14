@@ -33,24 +33,10 @@ export const updateLesson = async (id: string, data: any) => {
 }
 
 export const deleteLesson = async (id: string) => {
-
+	// TODO implement service
 }
 
 export const getLessonsForLecture = async (lectureId: string) => {
 	let lessons = await Lesson.find({ lectureId });
 	return lessons;
-}
-
-export const completeLesson = async (userId: string, lessonId: string) => {
-	let user = await User.findById(userId);
-	if (!user) throw newError(404, 'User not found');
-
-	const lessonObjectId = objectId(lessonId);
-
-	if (!user.completedLessons.includes(lessonObjectId)) {
-		user.completedLessons.push(lessonObjectId);
-		await user.save();
-	}
-
-	return newResponse('Lesson marked as completed');
 }

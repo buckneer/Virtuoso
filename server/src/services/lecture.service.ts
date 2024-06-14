@@ -62,18 +62,5 @@ export const getLecturesForCourse = async (courseId: string) => {
 	return lectures;
 }
 
-export const completeLecture = async (userId: string, lectureId: string) => {
-	let user = await User.findById(userId);
-	if (!user) throw new Error('User not found');
-
-	const lectureObjectId = objectId(lectureId);
-
-	if (!user.completedLectures.includes(lectureObjectId)) {
-		user.completedLectures.push(lectureObjectId);
-		await user.save();
-	}
-
-	return { message: 'Lecture marked as completed' };
-};
 
 

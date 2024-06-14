@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import {
-    addLecture, completeLecture,
+    addLecture,
     deleteLecture,
     getLecture,
     getLectures,
@@ -75,16 +75,3 @@ export async function handleGetLecturesForCourse(req: Request, res: Response) {
         return res.status(e.status || 500).send(e || 'Internal Server Error');
     }
 }
-
-export async function handleCompleteLecture(req: Request, res: Response) {
-    try {
-        let userId = req.user!.id;
-        let { lectureId } = req.params;
-
-        let resp = await completeLecture(userId, lectureId);
-        return res.send(resp);
-    } catch (e: any) {
-        return res.status(e.status || 500).send(e || 'Internal Server Error');
-    }
-}
-

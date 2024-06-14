@@ -19,21 +19,6 @@ app.use(express.urlencoded({extended: false}))
 app.use(requestLogger);
 
 
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		if (file.fieldname === 'photo') {
-			cb(null, 'uploads/photos/');
-		} else if (file.fieldname === 'attachments') {
-			cb(null, 'uploads/attachments/');
-		}
-	},
-	filename: (req, file, cb) => {
-		cb(null, `${Date.now()}-${file.originalname}`);
-	}
-});
-
-export const upload = multer({ storage });
-
 
 routes(app)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

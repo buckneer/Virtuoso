@@ -1,11 +1,17 @@
 import express from "express";
 import {
-	handleCreateCourse, handleDeleteCourse, handleEnrollCourse, handleFinishCourse,
+	handleCreateCourse, handleDeleteCourse,
 	handleGetCourse, handleGetCourseByUser,
 	handleGetCourses, handleGetCoursesByUser, handleGetEnrolledCourses,
 	handleUpdateCourse
 } from "../controllers/course.controller";
-import {upload} from "../app";
+import multer from "multer";
+import {storage} from "../utils";
+
+
+
+const upload = multer({ storage });
+
 
 const router = express.Router({mergeParams: true});
 
@@ -18,8 +24,6 @@ router.delete('/:courseId', handleDeleteCourse);
 router.get('/user', handleGetCoursesByUser);
 router.get('/user/:courseId', handleGetCourseByUser);
 
-router.post('/courses/:courseId/enroll', handleEnrollCourse);
-router.post('/courses/:courseId/finish', handleFinishCourse);
 router.get('/courses/enrolled', handleGetEnrolledCourses);
 
 export {router as courseRouter};
