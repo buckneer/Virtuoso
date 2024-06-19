@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import mongoose from "mongoose";
 import {enrollInCourse, enrollStudent} from "../services/enrollment.service";
-import {completeLesson} from "../services/lesson.service";
+import {completeLesson} from "../services/enrollment.service";
 
 export const handleEnrollStudent = async (req: Request, res: Response) => {
     try {
@@ -28,10 +28,10 @@ export const handleEnrollInCourse = async (req: Request, res: Response) => {
 
 export const handleCompleteLesson = async (req: Request, res: Response) => {
     try {
-        const { lessonId } = req.body;
+        const { courseId, lessonId } = req.body;
         const { id } = req.user!;
 
-        const enrollment = await completeLesson(id, lessonId);
+        const enrollment = await completeLesson(id, courseId, lessonId);
 
         res.status(200).json(enrollment);
     } catch (e: any) {

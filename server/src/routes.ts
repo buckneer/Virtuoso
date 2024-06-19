@@ -5,6 +5,7 @@ import {userGuard} from "./middleware/routeGuard";
 import {courseRouter} from "./routers/course.router";
 import {lessonRouter} from "./routers/lesson.router";
 import {lectureRouter} from "./routers/lecture.router";
+import {enrollmentRouter} from "./routers/enrollment.router";
 
 
 export default function (app: Express) {
@@ -15,6 +16,7 @@ export default function (app: Express) {
 	app.use('/course', userGuard, courseRouter);
 	app.use('/lesson', userGuard, lessonRouter);
 	app.use('/lecture', userGuard, lectureRouter);
+	app.use('/enroll', userGuard, enrollmentRouter);
 
 	// User Auth Routes
 	app.post("/register", handleRegisterUser);

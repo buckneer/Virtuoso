@@ -7,14 +7,15 @@ import {
     getLessonsForLecture,
     updateLesson
 } from "../services/lesson.service";
+import "dotenv/config"
 import {LessonDocument} from "../models/lesson.model";
 
 export async function handleAddLesson(req: Request, res: Response) {
     try {
-        const { title, content, courseId } = req.body;
-        const attachmentPaths = req.files ? (req.files as Express.Multer.File[]).map(file => file.path) : [];
+        const { name, description, courseId } = req.body;
+        const attachmentPaths = req.files ? (req.files as Express.Multer.File[]).map(file => `${process.env.URL}/uploads/attachments/${file.path}`) : [];
 
-        const lesson = await createLesson(title, content, courseId, attachmentPaths);
+        const lesson = await createLesson(name, description, courseId, attachmentPaths);
 
         res.status(201).json(lesson);
     } catch (e: any) {
@@ -33,8 +34,8 @@ export async function handleGetLessons(req: Request, res: Response) {
 
 export async function handleGetLesson(req: Request, res: Response) {
     try {
-        let { id } = req.params;
-        let resp = await getLesson(id);
+        let { lessonId } = req.params;
+        let resp = await getLesson(lessonId);
         return res.send(resp);
     } catch (e: any) {
         return res.status(e.status || 500).send(e.message);

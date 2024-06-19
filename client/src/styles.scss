@@ -5,6 +5,14 @@
 
 body {
     background-image: url('/assets/images/bg.png');
-    background-repeat: no-repeat;
+    //background-repeat: no-repeat;
     background-size: cover;
+    //background-attachment: fixed;
+}
+
+
+@layer components {
+    .card {
+        @apply bg-custom-card transition-all  shadow-custom-card backdrop-blur-custom-card rounded-custom-card border border-custom-card;
+    }
 }

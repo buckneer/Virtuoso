@@ -1,6 +1,5 @@
 import express from "express";
-import {handleEnrollStudent} from "../controllers/enrollment.controller";
-import {handleCompleteLesson} from "../controllers/lesson.controller";
+import {handleCompleteLesson, handleEnrollStudent} from "../controllers/enrollment.controller";
 
 
 

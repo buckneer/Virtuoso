@@ -14,7 +14,7 @@ export const createCourse = async (userId: string, title: string, description: s
 		userId,
 		title,
 		description,
-		photo: photoPath
+		cover: photoPath
 	});
 
 	await course.save();
@@ -26,7 +26,8 @@ export const getCourses = async (userId?: string) => {
 	let courses = [];
 
 	if(userId) {
-		courses = await Course.find({userId});
+		let userObject = objectId(userId);
+		courses = await Course.find({userId: userObject});
 	} else {
 		courses = await Course.find();
 	}
@@ -39,9 +40,9 @@ export const getCourses = async (userId?: string) => {
 export const getCourse = async (courseId: string, userId?: string) => {
 	let course;
 	if(userId) {
-		course = await Course.find({_id: courseId, userId});
+		course = await Course.findOne({_id: courseId, userId});
 	} else {
-		course = await Course.find({_id: courseId});
+		course = await Course.findOne({_id: courseId});
 	}
 	if(!course) throw newError(404, "No course found");
 	return course;

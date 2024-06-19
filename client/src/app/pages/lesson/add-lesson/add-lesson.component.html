@@ -1,0 +1,20 @@
+<div class="upload-lesson card text-white">
+    <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+        <div>
+            <label for="name">Lesson Name:</label>
+            <input id="name" formControlName="name" type="text" required>
+        </div>
+
+        <div>
+            <label for="description">Description:</label>
+            <textarea id="description" formControlName="description"></textarea>
+        </div>
+
+        <div>
+            <label for="files">Attachments:</label>
+            <input id="files" type="file" (change)="onFileChange($event)" multiple>
+        </div>
+
+        <button type="submit">Upload Lesson</button>
+    </form>
+</div>

@@ -18,11 +18,11 @@ const CourseSchema = new Schema({
     title: {type: String, required: true},
     description: {type: String, required: true},
     cover: {type: String, required: false},
-    length: {type: String, required: false},
-    level: {type: Number, required: false},
+    length: {type: String, required: false, default: 0},
+    level: {type: Number, required: false, default: 0},
     lectures: [{type: Schema.ObjectId, ref: 'Lecture'}],
-    price: {type: Number, required: false},
-    rating: {type: Number, required: false},
+    price: {type: Number, required: false, default: 0},
+    rating: {type: Number, required: false, default: 0},
 });
 
 const Course = model<CourseDocument>('Course', CourseSchema);

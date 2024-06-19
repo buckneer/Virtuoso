@@ -8,12 +8,13 @@ import {
 	getLessonsByLecture,
 	updateCourse
 } from "../services/course.service";
+import "dotenv/config"
 
 
 export async function handleCreateCourse(req: Request, res: Response) {
 	try {
-		const { title, description } = req.body;
-		const photoPath = req.file ? req.file.path : '';
+		const { title, description, length } = req.body;
+		const photoPath = req.file ? `${process.env.URL}/uploads/photos/${req.file.filename}` : '';
 		const { id } = req.user!;
 
 		const course = await createCourse(id, title, description, photoPath);

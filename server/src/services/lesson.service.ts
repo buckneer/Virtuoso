@@ -1,22 +1,32 @@
 import Lesson, {LessonDocument} from "../models/lesson.model";
-import Lecture from "../models/lecture.model";
+import Course from "../models/course.model";
 import {newError} from "../utils/errors";
-import {newResponse} from "../utils/response";
-import User from "../models/user.model";
-import {Types} from "mongoose";
-import {objectId} from "../utils";
 
 
 
-export const createLesson = async (title: string, content: string, courseId: string, attachmentPaths: string[]) => {
+
+export const createLesson = async (name: string, description: string, lectureId: string, attachmentPaths: string[]) => {
+
+
+	// let course = await Course.findOne({_id: courseId});
+	// if (!course) throw newError(404, 'Course not found');
+
 	const lesson = new Lesson({
-		title,
-		content,
-		courseId,
+		name,
+		description,
+		lectureId,
 		attachments: attachmentPaths
 	});
 
-	await lesson.save();
+	let newLesson = await lesson.save();
+
+	console.log("HERE IS THE ERROR");
+	// await Course.updateOne({_id: courseId}, {
+	// 	$addToSet: {
+	// 		lessons: newLesson._id
+	// 	}
+	// })
+
 	return lesson;
 };
 

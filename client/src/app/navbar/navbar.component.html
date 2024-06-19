@@ -1,31 +1,32 @@
-<nav *ngIf="this.navbarService.visible" class="bg-black w-full fixed">
-    <div class="flex justify-between items-center mx-5">
-        <div class="is-a-brand flex-1">
+<nav *ngIf="this.navbarService.visible" class="sticky mt-7 w-full top-2 z-50">
+    <div class="flex card px-5 justify-between items-center mx-5">
+        <a routerLink="/" class="is-a-brand flex-1">
             <img src="assets/logo.svg" class="p-4 w-1/3" />
             <!-- <h1 *ngIf="(message$ | async) as message"> {{ message }}</h1> -->
-        </div>
+        </a>
 
-        <form class="max-w-md mx-auto flex-1">   
-            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <form class="max-w-md mx-auto flex-1">
+            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only ">Search</label>
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-green-50 focus:ring-green-500 focus:border-green-500 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search Courses" required />
+                <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search Courses" required />
                 <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Search</button>
             </div>
         </form>
 
 
-       
+
         <ul *ngIf="(user$ | async) as user" class="flex justify-end gap-2 text-white items-center flex-1">
+            <li><a routerLink="my-courses">My Courses</a> </li>
             <li><a routerLink='login'>{{ user.name }}</a></li>
-            <li><a (click)="logoutUser()">Logout</a></li>
+            <li><a class="cursor-pointer" (click)="logoutUser()">Logout</a></li>
         </ul>
-        
-            
+
+
         <ul *ngIf="(user$ | async) == null" class="flex justify-end gap-2 text-white items-center flex-1">
             <li><a routerLink='login'>Login</a></li>
             <li><a routerLink='register'>Register</a></li>
