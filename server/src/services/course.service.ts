@@ -27,10 +27,22 @@ export const getCourses = async (userId?: string) => {
 
 	if(userId) {
 		let userObject = objectId(userId);
-		courses = await Course.find({userId: userObject});
+		courses = await Course.find({userId: userObject}).populate({
+			path: 'lectures',
+			populate: {
+				path: 'lessons'
+			}
+		});
 	} else {
-		courses = await Course.find();
+		courses = await Course.find().populate({
+			path: 'lectures',
+			populate: {
+				path: 'lessons'
+			}
+		})
 	}
+
+	console.log(courses);
 
 	return courses;
 
@@ -42,11 +54,31 @@ export const getCourse = async (courseId: string, userId?: string) => {
 	if(userId) {
 		course = await Course.findOne({_id: courseId, userId});
 	} else {
-		course = await Course.findOne({_id: courseId});
+		course = await Course.findOne({_id: courseId}).populate({
+			path: 'lectures',
+			populate: {
+				path: 'lessons'
+			}
+		});
 	}
 	if(!course) throw newError(404, "No course found");
 	return course;
 }
+
+export const searchCourses = async (query: string): Promise<CourseDocument[]> => {
+	const courses = await Course.find({
+		$or: [
+			{ title: { $regex: query, $options: "i" } },
+			{ description: { $regex: query, $options: "i" } }
+		]
+	}).populate({
+		path: 'lectures',
+		populate: {
+			path: 'lessons'
+		}
+	});
+	return courses;
+};
 
 
 export const updateCourse = async (courseId: string, data: Partial<CourseDocument>) => {

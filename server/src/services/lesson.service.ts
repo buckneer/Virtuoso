@@ -1,6 +1,7 @@
 import Lesson, {LessonDocument} from "../models/lesson.model";
 import Course from "../models/course.model";
 import {newError} from "../utils/errors";
+import Lecture from "../models/lecture.model";
 
 
 
@@ -8,8 +9,10 @@ import {newError} from "../utils/errors";
 export const createLesson = async (name: string, description: string, lectureId: string, attachmentPaths: string[]) => {
 
 
-	// let course = await Course.findOne({_id: courseId});
-	// if (!course) throw newError(404, 'Course not found');
+	console.log(lectureId);
+
+	let lecture = await Lecture.findOne({ _id: lectureId });
+	if (!lecture) throw newError(404, 'Lecture not found');
 
 	const lesson = new Lesson({
 		name,
@@ -20,12 +23,18 @@ export const createLesson = async (name: string, description: string, lectureId:
 
 	let newLesson = await lesson.save();
 
-	console.log("HERE IS THE ERROR");
+
 	// await Course.updateOne({_id: courseId}, {
 	// 	$addToSet: {
 	// 		lessons: newLesson._id
 	// 	}
 	// })
+
+	await Lecture.updateOne({_id: lectureId}, {
+		$addToSet: {
+			lessons: newLesson._id
+		}
+	})
 
 	return lesson;
 };

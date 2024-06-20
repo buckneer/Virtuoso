@@ -15,6 +15,9 @@ import {MyCoursesComponent} from "./pages/course/my-courses/my-courses.component
 import {AddCourseComponent} from "./pages/course/add-course/add-course.component";
 import { CourseComponent } from "./pages/course/course/course.component";
 import {AddLessonComponent} from "./pages/lesson/add-lesson/add-lesson.component";
+import {AddLectureComponent} from "./pages/lectures/add-lecture/add-lecture.component";
+import {SearchComponent} from "./pages/course/search/search.component";
+import {AllCoursesComponent} from "./pages/course/all-courses/all-courses.component";
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -33,5 +36,9 @@ export const routes: Routes = [
     {path: 'my-courses', component: MyCoursesComponent, canActivate: [RoleGuard], data: {roles: []}},
     {path: 'add-course', component: AddCourseComponent, canActivate: [RoleGuard], data: { roles: []}},
     {path: 'course/:courseId', component: CourseComponent, canActivate: [RoleGuard], data: { roles: []}},
-    {path: 'course/:courseId/lesson/new', component: AddLessonComponent, canActivate: [RoleGuard], data: { roles: []}},
+    {path: 'course/:courseId/lecture/new', component: AddLectureComponent, canActivate: [RoleGuard], data: { roles: []}},
+    {path: 'course/:courseId/lecture/:lectureId/lesson/new', component: AddLessonComponent, canActivate: [RoleGuard], data: { roles: []}},
+    {path: 'search', component: SearchComponent, canActivate: [RoleGuard], data: { roles: []}},
+    {path: 'courses', component: AllCoursesComponent, canActivate: [RoleGuard], data: { roles: []}},
+
 ];

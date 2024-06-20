@@ -1,31 +1,60 @@
-<div *ngIf="course" class="w-full">
+<div *ngIf="course" class="w-full h-[200vh]">
     <div class="  mt-5 w-full">
         <div class="flex justify-center items-center">
             <h1 class="text-3xl text-white font-black">{{ this.course!.title }}</h1>
         </div>
 
-        <div class="card mt-5 w-2/3 mx-auto ">
+        <div class="card mt-5 mx-5  ">
             <div class="flex items-center justify-between mx-5">
                 <div class="text-white">
                     <h1 class="text-2xl p-5">Course Actions </h1>
                 </div>
                 <div class="text-white flex gap-5 items-center">
-                    <ng-icon class="hover:animate-pulse hover:scale-110 transition-all cursor-pointer" size="30" name="heroPlus" />
+                    <a [routerLink]="['lecture/new']"> <ng-icon class="hover:animate-pulse hover:scale-110 transition-all cursor-pointer" size="30" name="heroPlus" /> </a>
                     <ng-icon class="hover:animate-pulse hover:scale-110 transition-all cursor-pointer" size="30" name="heroPencil" />
                     <ng-icon class="hover:animate-pulse hover:scale-110 transition-all cursor-pointer" size="30" name="heroTrash" />
                 </div>
             </div>
         </div>
 
-        <a *ngIf="this.course!.lectures.length === 0" [routerLink]="['lesson/new']" class="card hover:bg-custom-hover cursor-pointer hover:scale-105 w-1/3 mt-5 mx-auto py-5 flex flex-col justify-center items-center">
+        <a *ngIf="this.course!.lectures.length === 0" [routerLink]="['lecture/new']" class="card hover:bg-custom-hover cursor-pointer hover:scale-105 w-1/3 mt-5 mx-auto py-5 flex flex-col justify-center items-center">
 
             <h1 class="text-white text-3xl mb-3 px-1">CREATE LESSON</h1>
 
             <ng-icon class="text-white" size="40" name="heroPlus" />
         </a>
 
-        <div *ngIf="this.course!.lectures.length !== 0" class="">
+        <div *ngIf="this.course!.lectures.length !== 0" class="grid grid-cols-3 mx-5 mt-5 gap-5">
+            <div class="col-span-2">
+                <div *ngIf="this.course!.lectures[this.active].lessons!.length === 0" class="card text-white w-full  flex justify-center items-center">
+                    <a
+                       [routerLink]="['lecture', this.course!.lectures[this.active]._id, 'lesson', 'new']"
+                       class=" py-5 flex flex-col justify-center items-center">
 
+                        <h1 class="text-white">Create Lesson</h1>
+                        <ng-icon class="text-white" size="40" name="heroPlus" />
+                    </a>
+                </div>
+
+                <div *ngIf="this.course!.lectures[this.active].lessons!.length !== 0"  class="w-full">
+                    <div *ngFor="let lesson of this.course!.lectures[this.active].lessons" class="">
+                        <app-lesson-item [lesson]="lesson" />
+                    </div>
+                    <a
+                            [routerLink]="['lecture', this.course!.lectures[this.active]._id, 'lesson', 'new']"
+                            class="card mt-5 py-5 flex flex-col justify-center items-center">
+
+                        <h1 class="text-white">Create Lesson</h1>
+                        <ng-icon class="text-white" size="40" name="heroPlus" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="card flex flex-col gap-5 text-white p-5 sticky top-0">
+                <div *ngFor="let lecture of this.course!.lectures; index as i">
+                    <h1 (click)="changeActiveLecture(i)" class="font-black border border-transparent transition-all cursor-pointer p-2 hover:bg-black hover:border-custom-card rounded-custom-card">{{ lecture.name }}</h1>
+                </div>
+            </div>
         </div>
     </div>
 </div>

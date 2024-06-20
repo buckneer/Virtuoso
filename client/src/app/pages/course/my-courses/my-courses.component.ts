@@ -27,7 +27,10 @@ export class MyCoursesComponent implements OnInit {
 
 	ngOnInit() {
 		this.courseService.getCourses().subscribe({
-			next: (courses) => this.courses = courses,
+			next: (courses) => {
+				console.log(courses.lectures);
+				this.courses = courses
+			},
 			error: (err) => console.error(err)
 		});
 	}

@@ -2,7 +2,7 @@ import express from "express";
 import {
 	handleCreateCourse, handleDeleteCourse,
 	handleGetCourse, handleGetCourseByUser,
-	handleGetCourses, handleGetCoursesByUser, handleGetEnrolledCourses,
+	handleGetCourses, handleGetCoursesByUser, handleGetEnrolledCourses, handleSearchCourses,
 	handleUpdateCourse
 } from "../controllers/course.controller";
 import multer from "multer";
@@ -16,6 +16,7 @@ const upload = multer({ storage });
 const router = express.Router({mergeParams: true});
 
 router.get('/', handleGetCourses);
+router.get('/search', handleSearchCourses);
 router.get('/:courseId', handleGetCourse);
 router.post('/', upload.single('photo'), handleCreateCourse);
 router.put('/:courseId', handleUpdateCourse);

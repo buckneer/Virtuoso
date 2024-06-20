@@ -13,18 +13,16 @@ export class LessonService {
 
 	constructor(private http: HttpClient) { }
 
-	addLesson(name: string, description: string, courseId: string, files: File[]): Observable<any> {
+	addLesson(name: string, description: string, lectureId: string, files: File[]): Observable<any> {
 		const formData = new FormData();
 		formData.append('name', name);
 		formData.append('description', description);
-		formData.append('courseId', courseId);
+		formData.append('lectureId', lectureId);
 
 
 		files.forEach(file => {
 			formData.append('attachments', file, file.name);
 		});
-
-		console.log(courseId);
 
 		return this.http.post(this.apiUrl, formData);
 	}

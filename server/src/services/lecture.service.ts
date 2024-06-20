@@ -13,9 +13,9 @@ export const addLecture = async (data: LectureDocument) => {
 	let newLecture = new Lecture(data);
 	await newLecture.save();
 
-	// @ts-ignore
-	course.lectures.push(newLecture._id);
-	await course.save();
+	await Course.updateOne({_id: data.courseId},  {
+		$addToSet: {lectures: newLecture}
+	})
 
 	return newResponse('New Lecture Created');
 }

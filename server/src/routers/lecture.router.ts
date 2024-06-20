@@ -5,7 +5,7 @@ const router = express.Router({mergeParams: true});
 
 router.get('/', (req, res) => {});
 
-router.post('/lectures', handleAddLecture);
+router.post('/', handleAddLecture);
 router.get('/courses/:courseId/lectures', handleGetLecturesForCourse);
 
 export {router as lectureRouter};

@@ -4,7 +4,7 @@ export interface EnrollmentDocument extends Document {
 	userId: mongoose.Types.ObjectId;
 	courseId: mongoose.Types.ObjectId;
 	enrollmentDate: Date;
-	progress: number; // percentage of completion
+	progress: number;
 	completed: boolean;
 	completedLessons: mongoose.Types.ObjectId[];
 	completedCoursesDates: { courseId: mongoose.Types.ObjectId; date: Date }[];

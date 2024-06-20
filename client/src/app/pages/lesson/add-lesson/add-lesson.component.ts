@@ -14,14 +14,14 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class AddLessonComponent implements OnInit {
 
-	courseId: string | null;
+	lectureId: string | null;
 	lessonForm: FormGroup;
 	selectedFiles: File[] = [];
 
 	private route = inject(ActivatedRoute);
 
 	ngOnInit() {
-		this.courseId = this.route.snapshot.paramMap.get('courseId');
+		this.lectureId = this.route.snapshot.paramMap.get('lectureId');
 	}
 
 	constructor(private fb: FormBuilder, private lessonService: LessonService) {
@@ -43,10 +43,10 @@ export class AddLessonComponent implements OnInit {
 
 		const { name, description } = this.lessonForm.value;
 
-		if (!this.courseId) {
+		if (!this.lectureId) {
 			return
 		}
-		this.lessonService.addLesson(name, description, this.courseId, this.selectedFiles)
+		this.lessonService.addLesson(name, description, this.lectureId, this.selectedFiles)
 			.subscribe(response => {
 				console.log('Lesson uploaded successfully!', response);
 				// Handle success response

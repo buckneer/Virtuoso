@@ -1,13 +1,14 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import {enrollInCourse, enrollStudent} from "../services/enrollment.service";
-import {completeLesson} from "../services/enrollment.service";
+import { enrollStudent, completeLesson, updateProgress, completeCourse, getUserEnrollments } from "../services/enrollment.service";
+import {object} from "yup";
+import {objectId} from "../utils";
 
 export const handleEnrollStudent = async (req: Request, res: Response) => {
     try {
         const { userId, courseId } = req.body;
-        const userObjectId = new mongoose.Types.ObjectId(userId);
-        const courseObjectId = new mongoose.Types.ObjectId(courseId);
+        const userObjectId = objectId(userId);
+        const courseObjectId = objectId(courseId);
 
         const enrollment = await enrollStudent(userObjectId, courseObjectId);
 
@@ -16,15 +17,8 @@ export const handleEnrollStudent = async (req: Request, res: Response) => {
         return res.status(e.status || 500).send(e || 'Internal Server Error');
     }
 };
-export const handleEnrollInCourse = async (req: Request, res: Response) => {
-    try {
-        const { userId, courseId } = req.body;
-        const result = await enrollInCourse(userId, courseId);
-        res.status(200).json(result);
-    } catch (e: any) {
-        res.status(400).json({ message: e.message });
-    }
-};
+
+
 
 export const handleCompleteLesson = async (req: Request, res: Response) => {
     try {
@@ -39,3 +33,38 @@ export const handleCompleteLesson = async (req: Request, res: Response) => {
     }
 };
 
+export const handleUpdateProgress = async (req: Request, res: Response) => {
+    try {
+        const { userId, courseId, progress } = req.body;
+
+        const enrollment = await updateProgress(userId, courseId, progress);
+
+        res.status(200).json(enrollment);
+    } catch (e: any) {
+        return res.status(e.status || 500).send(e || 'Internal Server Error');
+    }
+};
+
+export const handleCompleteCourse = async (req: Request, res: Response) => {
+    try {
+        const { userId, courseId } = req.body;
+
+        const enrollment = await completeCourse(userId, courseId);
+
+        res.status(200).json(enrollment);
+    } catch (e: any) {
+        return res.status(e.status || 500).send(e || 'Internal Server Error');
+    }
+};
+
+export const handleGetUserEnrollments = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+
+        const enrollments = await getUserEnrollments(userId);
+
+        res.status(200).json(enrollments);
+    } catch (e: any) {
+        return res.status(e.status || 500).send(e || 'Internal Server Error');
+    }
+};

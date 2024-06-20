@@ -12,10 +12,10 @@ import {LessonDocument} from "../models/lesson.model";
 
 export async function handleAddLesson(req: Request, res: Response) {
     try {
-        const { name, description, courseId } = req.body;
+        const { name, description, lectureId } = req.body;
         const attachmentPaths = req.files ? (req.files as Express.Multer.File[]).map(file => `${process.env.URL}/uploads/attachments/${file.path}`) : [];
 
-        const lesson = await createLesson(name, description, courseId, attachmentPaths);
+        const lesson = await createLesson(name, description, lectureId, attachmentPaths);
 
         res.status(201).json(lesson);
     } catch (e: any) {

@@ -3,9 +3,10 @@ import {ActivatedRoute, RouterLink} from "@angular/router";
 import {CourseService} from "../../../services/course.service";
 import {Course} from "../../../models/course";
 import {error} from "@angular/compiler-cli/src/transformers/util";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {NgIcon, provideIcons} from "@ng-icons/core";
-import {heroPencil, heroPlus, heroTrash} from "@ng-icons/heroicons/outline";
+import {heroCheck, heroPencil, heroPlus, heroTrash} from "@ng-icons/heroicons/outline";
+import {LessonItemComponent} from "../../../components/lesson-item/lesson-item.component";
 
 @Component({
 	selector: 'app-course',
@@ -14,14 +15,17 @@ import {heroPencil, heroPlus, heroTrash} from "@ng-icons/heroicons/outline";
 		NgIf,
 		NgIcon,
 		RouterLink,
+		NgForOf,
+		LessonItemComponent,
 	],
-	viewProviders: [provideIcons({heroTrash, heroPencil, heroPlus})],
+	viewProviders: [provideIcons({heroTrash, heroPencil, heroPlus, heroCheck})],
 	templateUrl: './course.component.html',
 	styleUrl: './course.component.css'
 })
 export class CourseComponent implements OnInit {
 	id: string | null;
 	course?: Course;
+	active: number = 0;
 
 	private route = inject(ActivatedRoute);
 	private courseService = inject(CourseService);
@@ -40,6 +44,11 @@ export class CourseComponent implements OnInit {
 				}
 			})
 		}
+	}
+
+
+	changeActiveLecture(index: number) {
+		this.active = index;
 	}
 
 

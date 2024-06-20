@@ -5,7 +5,7 @@ import {
 	deleteCourse,
 	getCourse,
 	getCourses, getEnrolledCourses, getLecturesByCourse,
-	getLessonsByLecture,
+	getLessonsByLecture, searchCourses,
 	updateCourse
 } from "../services/course.service";
 import "dotenv/config"
@@ -24,6 +24,21 @@ export async function handleCreateCourse(req: Request, res: Response) {
 		return res.status(e.status || 500).send(e || "Internal Server Error");
 	}
 }
+
+
+export async function handleSearchCourses(req: Request, res: Response) {
+	try {
+		const { query } = req.query;
+		if (!query) {
+			return res.status(400).send("Query parameter is required");
+		}
+		const courses = await searchCourses(query as string);
+		return res.send(courses);
+	} catch (e: any) {
+		return res.status(e.status || 500).send(e || "Internal Server Error");
+	}
+}
+
 
 export async function handleGetCourse(req: Request, res: Response) {
 	try {
