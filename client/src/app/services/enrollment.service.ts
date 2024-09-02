@@ -30,4 +30,8 @@ export class EnrollmentService {
 	getUserEnrollments(userId: string): Observable<any> {
 		return this.http.get(`${this.apiUrl}/user/${userId}`);
 	}
+
+	checkUserEnrolled(courseId: string): Observable<any> {
+		return this.http.get(`${this.apiUrl}/check/${courseId}`);
+	}
 }

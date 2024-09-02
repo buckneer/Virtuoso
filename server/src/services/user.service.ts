@@ -57,13 +57,10 @@ export const loginUser = async (username: string, password: string, userAgent: s
 
 
 		} else {
-			// throw new CustomError("InvalidCredentialsError", "Username or password incorrect");
 			throw newError(401, "Username or password incorrect");
 
 		}
 	} else {
-		// return {"message": "Username or password incorrect"}
-		// throw new CustomError("InvalidCredentialsError", "Username and password are required");
 		throw newError(409, "Username and Password are required");
 	}
 }

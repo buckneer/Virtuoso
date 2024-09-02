@@ -3,7 +3,7 @@ import {
 	handleCompleteCourse,
 	handleCompleteLesson,
 	handleEnrollStudent, handleGetUserEnrollments,
-	handleUpdateProgress
+	handleUpdateProgress, handleUserEnrolled
 } from "../controllers/enrollment.controller";
 
 
@@ -15,6 +15,7 @@ router.post('/lessons/:lessonId/complete', handleCompleteLesson);
 router.put('/progress', handleUpdateProgress);
 router.post('/complete', handleCompleteCourse);
 router.get('/user/:userId', handleGetUserEnrollments);
+router.get('/check/:courseId', handleUserEnrolled);
 
 
 export {router as enrollmentRouter};

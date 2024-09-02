@@ -1,10 +1,21 @@
-<div class="card relative w-full mt-5">
-    <div class="absolute right-5 top-5 card bg-black w-[30px] h-[30px] flex justify-start items-center cursor-pointer">
-        <!--                    <ng-icon name="heroCheck" size="28" />-->
+<div class="card relative w-full mt-5 p-5">
+    <div (click)="completeLesson()" class="absolute right-5 top-5 card text-green bg-black w-[30px] h-[30px] flex justify-start items-center cursor-pointer">
+        <ng-icon class="text-green-500" *ngIf="this.completedLesson" name="heroCheck" size="28"></ng-icon>
     </div>
-
     <div class="text-white">
-        <h1>{{ lesson.name }}</h1>
-        <h1>{{ lesson.description }}</h1>
+        <h1 class="text-4xl font-black my-5">{{ lesson.name }}</h1>
+        <ng-container *ngIf="lesson.attachments.length > 0">
+            <div *ngIf="lesson.type === 'video'">
+                <video width="100%" controls (play)="stopOtherVideos($event)">
+                    <source [src]="lesson.attachments[0]" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div *ngIf="lesson.type === 'image'">
+                <img [src]="lesson.attachments[0]" class="w-1/2  mx-auto h-auto object-cover rounded-md mb-4" />
+            </div>
+        </ng-container>
+
+        <div [innerHTML]="sanitizedDescription"></div>
     </div>
 </div>

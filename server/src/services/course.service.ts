@@ -101,16 +101,18 @@ export const updateCourse = async (courseId: string, data: Partial<CourseDocumen
 }
 
 export const deleteCourse = async (courseId: string) => {
-	let course = await Course.findOne({_id: courseId});
+	let course = await Course.findOne({ _id: courseId });
 
-	if(!course) throw newError(404, "No course found");
+	if (!course) throw newError(404, "No course found");
 
-	let deleted = Course.deleteOne({_id: courseId});
+	// Await the delete operation
+	let result = await Course.deleteOne({ _id: courseId });
 
-	if(!deleted) throw newError(500, "Internal Server Error");
+	// Check if the deletion was successful
+	if (result.deletedCount === 0) throw newError(500, "Internal Server Error");
+
 	return newResponse('Course Deleted');
-}
-
+};
 
 export const getLecturesByCourse = async (courseId: string) => {
 	let lectures = await Lecture.find({ courseId });

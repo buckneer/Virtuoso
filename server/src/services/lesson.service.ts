@@ -6,7 +6,7 @@ import Lecture from "../models/lecture.model";
 
 
 
-export const createLesson = async (name: string, description: string, lectureId: string, attachmentPaths: string[]) => {
+export const createLesson = async (name: string, description: string, type: string, lectureId: string, attachmentPaths: string[]) => {
 
 
 	console.log(lectureId);
@@ -17,6 +17,7 @@ export const createLesson = async (name: string, description: string, lectureId:
 	const lesson = new Lesson({
 		name,
 		description,
+		type,
 		lectureId,
 		attachments: attachmentPaths
 	});
